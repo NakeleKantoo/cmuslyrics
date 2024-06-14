@@ -27,13 +27,13 @@ def render():
             album = w.decode()[10:]
         elif w.startswith(b"position"):
             position = int(w.decode()[9:])
-    os.system("ffmpeg -y -i \""+file+"\" -an -vcodec copy "+user+"/cache.png -loglevel quiet")
     titlebar = artist+" - "+album+" - "+title
     twidth = int(subprocess.check_output(["tput","cols"]).decode())
     print(center_string(titlebar,twidth))
     width = twidth//2
     offset = int((width*1.4)-((width*1.4)//2))
-    os.system("viu -w "+str(width)+" -x "+str(offset)+" -y 1 "+user+"/cache.png")
+#    os.system("viu -w "+str(width)+" -x "+str(offset)+" -y 1 "+user+"/cache.png")
+    os.system("ffmpeg -y -i \""+file+"\" -an -vcodec copy -loglevel quiet -f image2pipe - | viu -w "+str(width)+" -x "+str(offset)+" -y 1 -")
     lyrics = subprocess.check_output(["clyrics",artist,title]).decode().split("\n")
     for w in lyrics:
         print(center_string(w,twidth))
